@@ -66,4 +66,33 @@ def gameover():
     font_rect.midtop=(360,100)
     playsurface.blit(Font_surface,font_rect)
     pygame.display.flip()
+    time.sleep(4)
+    pygame.quit()
+    sys.exit()
+
+while True:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+        elif event.type == pygame.KEYDOWN:
+            if pygame.key == pygame.K_RIGHT or pygame.key == ord('d'):
+                changeto = 'RIGHT'
+            if pygame.key == pygame.K_LEFT or pygame.key == ord('a'):
+                changeto = 'LEFT'
+            if pygame.key == pygame.K_UP or pygame.key == ord('w'):
+                changeto = 'UP'
+            if pygame.key == pygame.K_DOWN or pygame.key == ord('s'):
+                changeto = 'DOWN'
+            if pygame.key == pygame.K_ESCAPE:
+                pygame.event.post(pygame.event.Event(pygame.QUIT))
+    if changeto == "RIGHT" and not direction == 'LEFT':
+        direction = "RIGHT"
+    if changeto == "LEFT" and not direction == 'RIGHT':
+        direction = "LEFT"
+    if changeto == "DOWN" and not direction == 'UP':
+        direction = "DOWN"
+    if changeto == "UP" and not direction == 'DOWN':
+        direction = "UP"
+        
 
