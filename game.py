@@ -8,10 +8,10 @@ import time
 checkerror = pygame.init()
 
 if checkerror[1]>0:
-    print "error"
+    print("error")
     sys.exit(-1)
 else:
-    print "success"
+    print("success")
 
 #window
 playsurface = pygame.display.set_mode((720,460))
@@ -76,16 +76,19 @@ while True:
             pygame.quit()
             sys.exit()
         elif event.type == pygame.KEYDOWN:
-            if pygame.key == pygame.K_RIGHT or pygame.key == ord('d'):
+            if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                 changeto = 'RIGHT'
-            if pygame.key == pygame.K_LEFT or pygame.key == ord('a'):
+            if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                 changeto = 'LEFT'
-            if pygame.key == pygame.K_UP or pygame.key == ord('w'):
+            if event.key == pygame.K_UP or event.key == pygame.K_w:
                 changeto = 'UP'
-            if pygame.key == pygame.K_DOWN or pygame.key == ord('s'):
+            if event.key == pygame.K_DOWN or event.key == pygame.K_s:
                 changeto = 'DOWN'
-            if pygame.key == pygame.K_ESCAPE:
+            if event.key == pygame.K_ESCAPE:
                 pygame.event.post(pygame.event.Event(pygame.QUIT))
+
+    #The snake cannot go right if he's already moving left
+
     if changeto == "RIGHT" and not direction == 'LEFT':
         direction = "RIGHT"
     if changeto == "LEFT" and not direction == 'RIGHT':
@@ -94,5 +97,61 @@ while True:
         direction = "DOWN"
     if changeto == "UP" and not direction == 'DOWN':
         direction = "UP"
-        
+
+    #we are moving the snake here!
+    if direction == "RIGHT":
+        snakepos[0] += 10
+    if direction == "LEFT":
+        snakepos[0] -= 10
+    if direction == "UP":
+        snakepos[1] -= 10
+    if direction == "DOWN":
+        snakepos[1] += 10
+
+    #Snake Body Movement
+
+    snakebody.insert(0,list(snakepos))
+
+    if snakepos[0] == foodpos[0] and snakepos[1] == foodpos[1]:
+        foodspawn = False
+    else:
+        snakebody.pop()
+
+    if foodspawn == False:
+        foodpos = [random.randrange(0, 72) * 10, random.randrange(0, 46) * 10]
+
+    foodspawn = True
+
+    #changing the colour of screen!
+    playsurface.fill(white)
+
+    #looping throught the coordiates of snake's body to display snake
+    for pos in snakebody:
+        #we create each block with a square(rectangle)
+        pygame.draw.rect(playsurface, green, pygame.Rect(pos[0],pos[1], 10, 10))
+
+
+    #food!!
+    pygame.draw.rect(playsurface, brown, pygame.Rect(foodpos[0], foodpos[1], 10, 10))
+
+    #game over if you hit a wall.  snakepos should be more han atleast one of boundary
+
+    if snakepos[0]>710 or snakepos[0]<0:
+        gameover()
+    if snakepos[1]>450 or snakepos[1]<0:
+        gameover()
+
+    #snake should not eat his own tail
+
+    for block in snakebody[1:]:
+        if snakepos[0]== block[0] and snakepos[1]== block[1]:
+            gameover()
+
+    #updating the screen
+    pygame.display.flip()
+
+    #controlling number of frames
+
+    fpsController.tick(25)
+
 
