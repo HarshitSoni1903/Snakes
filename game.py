@@ -55,16 +55,30 @@ foodspawn = True
 direction = 'RIGHT'
 changeto = direction
 
+    #every game needs to keep score
+score =0
+
+def showscore(choice=1):
+    sfont = pygame.font.SysFont('Magneto Bold', 36)
+    s_surface = sfont.render("Score: {0}".format(score), True, red)
+    s_rect = s_surface.get_rect()
+    if choice==1:
+        s_rect.midtop = (80,10)
+    else:
+        s_rect.midtop = (360, 120)
+    playsurface.blit(s_surface, s_rect)
+
 #we need to display gameover on the screen once the game is over.
 
 def gameover():
     #using a font present in the system to stylize the "Game Over!" text
 
     myfont = pygame.font.SysFont('Magneto Bold',72)
-    Font_surface = myfont.render("Game Over!",True,red)
+    Font_surface = myfont.render("Game Over!",True,black)
     font_rect = Font_surface.get_rect()
-    font_rect.midtop=(360,100)
+    font_rect.midtop=(360,15)
     playsurface.blit(Font_surface,font_rect)
+    showscore(0)
     pygame.display.flip()
     time.sleep(4)
     pygame.quit()
@@ -114,6 +128,7 @@ while True:
 
     if snakepos[0] == foodpos[0] and snakepos[1] == foodpos[1]:
         foodspawn = False
+        score +=1
     else:
         snakebody.pop()
 
@@ -147,11 +162,13 @@ while True:
         if snakepos[0]== block[0] and snakepos[1]== block[1]:
             gameover()
 
+    #display th score
+    showscore()
     #updating the screen
     pygame.display.flip()
 
     #controlling number of frames
 
-    fpsController.tick(25)
+    fpsController.tick(23)
 
 
